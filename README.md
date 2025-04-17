@@ -39,8 +39,7 @@ HTML5 & CSS3
 
 1. Clone repositori ini:
 
-git clone https://github.com/username/nama-repo.git
-
+git clone https://github.com/Lanmaulana/Kalkulator-sederhana.git
 
 2. Buka file index.html di browser kamu
 
