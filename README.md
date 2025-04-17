@@ -55,9 +55,10 @@ git clone https://github.com/username/nama-repo.git
 
 .
 ├── index.html       # Tampilan utama
-├── style.css        # Styling kalkulator
-├── script.js        # Logika kalkulator (Vue.js)
-
+├── css/
+│   └── style.css    # Styling kalkulator
+├── js/
+│   └── script.js    # Logika kalkulator (Vue.js)
 
 
 # 💡 Rencana Pengembangan
