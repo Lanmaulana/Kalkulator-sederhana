@@ -50,15 +50,9 @@ git clone https://github.com/username/nama-repo.git
 
 
 # 📁 Struktur Project
-
-
-
-.
-├── index.html
-├── css/
-│   └── style.css
-├── js/
-│   └── script.js
+     index.html
+     css/style.css
+     js/script.js
 
 # 💡 Rencana Pengembangan
 
