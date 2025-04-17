@@ -49,10 +49,12 @@ git clone https://github.com/username/nama-repo.git
 
 
 
-# 📁 Struktur Project
-     index.html
-     css/style.css
-     js/script.js
+# 📁 Struktur Project.
+     index.html  #Tampilan Utama    
+     css/
+     style.css    # Styling kalkulator
+     js/
+     script.js   # Logika kalkulator (Vue.js)
 
 # 💡 Rencana Pengembangan
 
