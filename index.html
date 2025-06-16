@@ -1,26 +1,238 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Kalkulator Modern</title>
-  <link rel="stylesheet" href="css/style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      background: linear-gradient(45deg, #3fa9fc, #146080, #ff6b6b, #ffcc5c);
+      background-size: 300% 300%;
+      animation: moveBG 8s infinite linear;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    @keyframes moveBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .calculator {
+      display: grid;
+      grid-template-columns: repeat(4, 80px);
+      grid-template-rows: repeat(6, 80px);
+      gap: 12px;
+      padding: 25px;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    }
+
+    .display, .answer {
+      grid-column: span 4;
+      text-align: right;
+      padding: 10px 15px;
+      font-size: 20px;
+    }
+
+    .display { border-bottom: 2px solid #ccc; color: #555; }
+    .answer { color: #146080; font-weight: bold; }
+
+    .btn, .zero {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 22px;
+      background: #f4faff;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+
+    .btn:hover, .zero:hover {
+      background: #e3f2fd;
+      transform: scale(1.05);
+    }
+
+    .operator { background: #ffcc5c; }
+    .operator:hover { background: #ffb84d; }
+    .zero { grid-column: span 2; }
+
+    @media (max-width: 768px) {
+      .calculator {
+        transform: scale(0.9);
+      }
+    }
+  </style>
 </head>
 <body>
   <div id="app">
     <div class="calculator">
-      <div class="display">
-        <div class="answer">{{ answer }}</div>
-        <div class="log">{{ logList + current }}</div>
-      </div>
-      <transition-group name="fade" tag="div" class="buttons">
-        <div v-for="btn in buttons" :key="btn.text" @click="btn.action" :class="btn.class">{{ btn.text }}</div>
-      </transition-group>
+      <div class="answer">{{ answer }}</div>
+      <div class="display">{{ logList + current }}</div>
+      <div @click="clear" id="clear" class="btn operator">C</div>
+      <div @click="sign" id="sign" class="btn operator">±</div>
+      <div @click="percent" id="percent" class="btn operator">%</div>
+      <div @click="divide" id="divide" class="btn operator">/</div>
+
+      <div @click="append('7')" id="n7" class="btn">7</div>
+      <div @click="append('8')" id="n8" class="btn">8</div>
+      <div @click="append('9')" id="n9" class="btn">9</div>
+      <div @click="times" id="times" class="btn operator">*</div>
+
+      <div @click="append('4')" id="n4" class="btn">4</div>
+      <div @click="append('5')" id="n5" class="btn">5</div>
+      <div @click="append('6')" id="n6" class="btn">6</div>
+      <div @click="minus" id="minus" class="btn operator">-</div>
+
+      <div @click="append('1')" id="n1" class="btn">1</div>
+      <div @click="append('2')" id="n2" class="btn">2</div>
+      <div @click="append('3')" id="n3" class="btn">3</div>
+      <div @click="plus" id="plus" class="btn operator">+</div>
+
+      <div @click="append('0')" id="n0" class="zero">0</div>
+      <div @click="dot" id="dot" class="btn">.</div>
+      <div @click="equal" id="equal" class="btn operator">=</div>
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
-  <script src="js/script.js"></script>
+  <script>
+    new Vue({
+      el: "#app",
+      data() {
+        return {
+          logList: "",
+          current: "",
+          answer: "",
+          operatorClicked: true
+        };
+      },
+      methods: {
+        append(number) {
+          if (this.operatorClicked) {
+            this.current = "";
+            this.operatorClicked = false;
+          }
+          this.animateNumber(`n${number}`);
+          this.current += number;
+        },
+        addtoLog(operator) {
+          if (!this.operatorClicked) {
+            this.logList += `${this.current} ${operator} `;
+            this.current = "";
+            this.operatorClicked = true;
+          }
+        },
+        animateNumber(id) {
+          anime({
+            targets: `#${id}`,
+            backgroundColor: [
+              { value: "#222", duration: 100 },
+              { value: "#f4faff", duration: 150 }
+            ],
+            easing: "easeInOutCubic"
+          });
+        },
+        animateOperator(id) {
+          anime({
+            targets: `#${id}`,
+            backgroundColor: [
+              { value: "#a6daff", duration: 100 },
+              { value: "#d9efff", duration: 150 }
+            ],
+            easing: "easeInOutCubic"
+          });
+        },
+        clear() {
+          this.animateOperator("clear");
+          this.current = "";
+          this.answer = "";
+          this.logList = "";
+          this.operatorClicked = false;
+        },
+        sign() {
+          this.animateOperator("sign");
+          if (this.current) {
+            this.current =
+              this.current.charAt(0) === "-"
+                ? this.current.slice(1)
+                : `-${this.current}`;
+          }
+        },
+        percent() {
+          this.animateOperator("percent");
+          if (this.current) {
+            this.current = (parseFloat(this.current) / 100).toString();
+          }
+        },
+        dot() {
+          this.animateNumber("dot");
+          if (!this.current.includes(".")) {
+            this.current += ".";
+          }
+        },
+        divide() {
+          this.animateOperator("divide");
+          this.addtoLog("/");
+        },
+        times() {
+          this.animateOperator("times");
+          this.addtoLog("*");
+        },
+        minus() {
+          this.animateOperator("minus");
+          this.addtoLog("-");
+        },
+        plus() {
+          this.animateOperator("plus");
+          this.addtoLog("+");
+        },
+        equal() {
+          this.animateOperator("equal");
+          if (!this.operatorClicked) {
+            try {
+              const result = new Function(`return ${this.logList + this.current}`)();
+              this.answer = result.toString();
+              this.logList = "";
+              this.current = "";
+            } catch (e) {
+              this.triggerErrorEffect();
+              this.answer = "❌ Error!";
+            }
+          } else {
+            this.triggerErrorEffect();
+            this.answer = "⚠️ Masukkan angka!";
+          }
+        },
+        triggerErrorEffect() {
+          anime({
+            targets: ".calculator",
+            translateX: [
+              { value: -10, duration: 50 },
+              { value: 10, duration: 50 },
+              { value: -5, duration: 50 },
+              { value: 5, duration: 50 },
+              { value: 0, duration: 50 }
+            ],
+            easing: "easeInOutSine"
+          });
+        }
+      }
+    });
+  </script>
 </body>
 </html>
