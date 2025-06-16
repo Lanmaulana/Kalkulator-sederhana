@@ -134,3 +134,32 @@ body {
         font-size: 45px;
     }
 }
+
+/* 📱 Extra Responsif (HP Kecil <480px) */
+@media (max-width: 480px) {
+  body {
+    align-items: flex-start;
+    padding: 20px 10px;
+    height: auto;
+  }
+
+  .calculator {
+    width: 100%;
+    max-width: 360px;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto;
+    gap: 10px;
+    padding: 20px;
+  }
+
+  .btn, .zero {
+    font-size: 18px;
+    padding: 12px;
+  }
+
+  .display,
+  .answer {
+    font-size: 20px;
+    padding: 10px;
+  }
+}
