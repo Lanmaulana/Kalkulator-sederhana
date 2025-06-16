@@ -1,76 +1,98 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Kalkulator Modern</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
   <style>
     * {
-      margin: 0; padding: 0; box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
+      box-sizing: border-box;
+      font-family: 'Orbitron', sans-serif;
     }
 
     body {
-      height: 100vh;
-      background: linear-gradient(45deg, #3fa9fc, #146080, #ff6b6b, #ffcc5c);
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
       background-size: 300% 300%;
-      animation: moveBG 8s infinite linear;
+      animation: bgMotion 12s ease infinite;
       display: flex;
       justify-content: center;
       align-items: center;
+      height: 100vh;
+      margin: 0;
     }
 
-    @keyframes moveBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    @keyframes bgMotion {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
     }
 
     .calculator {
       display: grid;
       grid-template-columns: repeat(4, 80px);
       grid-template-rows: repeat(6, 80px);
-      gap: 12px;
-      padding: 25px;
-      background: rgba(255,255,255,0.95);
-      backdrop-filter: blur(10px);
+      gap: 10px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.08);
       border-radius: 20px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      backdrop-filter: blur(15px);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+      color: #fff;
     }
 
     .display, .answer {
       grid-column: span 4;
-      text-align: right;
+      background: rgba(255, 255, 255, 0.05);
       padding: 10px 15px;
-      font-size: 20px;
+      border-radius: 10px;
+      text-align: right;
     }
 
-    .display { border-bottom: 2px solid #ccc; color: #555; }
-    .answer { color: #146080; font-weight: bold; }
+    .display {
+      font-size: 18px;
+      color: #ccc;
+    }
+
+    .answer {
+      font-size: 24px;
+      color: #00ffd5;
+      font-weight: bold;
+    }
 
     .btn, .zero {
+      background: rgba(0, 0, 0, 0.4);
+      border: 2px solid rgba(0,255,255,0.2);
+      border-radius: 12px;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 22px;
-      background: #f4faff;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: 600;
+      font-size: 20px;
+      color: #fff;
       transition: 0.2s;
+      cursor: pointer;
     }
 
     .btn:hover, .zero:hover {
-      background: #e3f2fd;
+      background: rgba(0, 255, 255, 0.2);
       transform: scale(1.05);
     }
 
-    .operator { background: #ffcc5c; }
-    .operator:hover { background: #ffb84d; }
-    .zero { grid-column: span 2; }
+    .zero {
+      grid-column: span 2;
+    }
+
+    .operator {
+      background: #00ffd5;
+      color: #000;
+      font-weight: bold;
+    }
+
+    .operator:hover {
+      background: #00c4a7;
+    }
 
     @media (max-width: 768px) {
       .calculator {
@@ -88,22 +110,18 @@
       <div @click="sign" id="sign" class="btn operator">±</div>
       <div @click="percent" id="percent" class="btn operator">%</div>
       <div @click="divide" id="divide" class="btn operator">/</div>
-
       <div @click="append('7')" id="n7" class="btn">7</div>
       <div @click="append('8')" id="n8" class="btn">8</div>
       <div @click="append('9')" id="n9" class="btn">9</div>
       <div @click="times" id="times" class="btn operator">*</div>
-
       <div @click="append('4')" id="n4" class="btn">4</div>
       <div @click="append('5')" id="n5" class="btn">5</div>
       <div @click="append('6')" id="n6" class="btn">6</div>
       <div @click="minus" id="minus" class="btn operator">-</div>
-
       <div @click="append('1')" id="n1" class="btn">1</div>
       <div @click="append('2')" id="n2" class="btn">2</div>
       <div @click="append('3')" id="n3" class="btn">3</div>
       <div @click="plus" id="plus" class="btn operator">+</div>
-
       <div @click="append('0')" id="n0" class="zero">0</div>
       <div @click="dot" id="dot" class="btn">.</div>
       <div @click="equal" id="equal" class="btn operator">=</div>
@@ -127,7 +145,7 @@
             this.current = "";
             this.operatorClicked = false;
           }
-          this.animateNumber(`n${number}`);
+          this.animatePress(`n${number}`);
           this.current += number;
         },
         addtoLog(operator) {
@@ -137,99 +155,71 @@
             this.operatorClicked = true;
           }
         },
-        animateNumber(id) {
+        animatePress(id) {
           anime({
             targets: `#${id}`,
-            backgroundColor: [
-              { value: "#222", duration: 100 },
-              { value: "#f4faff", duration: 150 }
-            ],
-            easing: "easeInOutCubic"
-          });
-        },
-        animateOperator(id) {
-          anime({
-            targets: `#${id}`,
-            backgroundColor: [
-              { value: "#a6daff", duration: 100 },
-              { value: "#d9efff", duration: 150 }
-            ],
-            easing: "easeInOutCubic"
+            scale: [1, 0.95, 1],
+            duration: 150,
+            easing: 'easeInOutQuad'
           });
         },
         clear() {
-          this.animateOperator("clear");
+          this.animatePress("clear");
           this.current = "";
           this.answer = "";
           this.logList = "";
           this.operatorClicked = false;
         },
         sign() {
-          this.animateOperator("sign");
+          this.animatePress("sign");
           if (this.current) {
-            this.current =
-              this.current.charAt(0) === "-"
-                ? this.current.slice(1)
-                : `-${this.current}`;
+            this.current = this.current.charAt(0) === "-"
+              ? this.current.slice(1)
+              : `-${this.current}`;
           }
         },
         percent() {
-          this.animateOperator("percent");
+          this.animatePress("percent");
           if (this.current) {
             this.current = (parseFloat(this.current) / 100).toString();
           }
         },
         dot() {
-          this.animateNumber("dot");
+          this.animatePress("dot");
           if (!this.current.includes(".")) {
             this.current += ".";
           }
         },
         divide() {
-          this.animateOperator("divide");
+          this.animatePress("divide");
           this.addtoLog("/");
         },
         times() {
-          this.animateOperator("times");
+          this.animatePress("times");
           this.addtoLog("*");
         },
         minus() {
-          this.animateOperator("minus");
+          this.animatePress("minus");
           this.addtoLog("-");
         },
         plus() {
-          this.animateOperator("plus");
+          this.animatePress("plus");
           this.addtoLog("+");
         },
         equal() {
-          this.animateOperator("equal");
+          this.animatePress("equal");
           if (!this.operatorClicked) {
             try {
               const result = new Function(`return ${this.logList + this.current}`)();
               this.answer = result.toString();
               this.logList = "";
               this.current = "";
-            } catch (e) {
-              this.triggerErrorEffect();
-              this.answer = "❌ Error!";
+            } catch {
+              this.answer = "⚠️ ERROR!";
             }
           } else {
-            this.triggerErrorEffect();
-            this.answer = "⚠️ Masukkan angka!";
+            this.answer = "Masukkan Angka";
           }
-        },
-        triggerErrorEffect() {
-          anime({
-            targets: ".calculator",
-            translateX: [
-              { value: -10, duration: 50 },
-              { value: 10, duration: 50 },
-              { value: -5, duration: 50 },
-              { value: 5, duration: 50 },
-              { value: 0, duration: 50 }
-            ],
-            easing: "easeInOutSine"
-          });
         }
       }
     });
