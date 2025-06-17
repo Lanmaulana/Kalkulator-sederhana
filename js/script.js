@@ -92,3 +92,11 @@ new Vue({
         }
       }
     });
+  for (let i = 0; i < 100; i++) {
+    const drop = document.createElement("div");
+    drop.classList.add("drop");
+    drop.style.left = `${Math.random() * 100}%`;
+    drop.style.animationDuration = `${Math.random() * 1 + 1}s`;
+    drop.style.animationDelay = `${Math.random() * 5}s`;
+    rainContainer.appendChild(drop);
+  }
